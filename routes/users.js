@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var NodeCache = require('node-cache');
-const locationCache = new NodeCache( { stdTTL: 100, checkperiod: 120 } );
+const locationCache = new NodeCache( { stdTTL: 0, checkperiod: 0 } );
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
