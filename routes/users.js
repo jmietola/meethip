@@ -38,11 +38,11 @@ router.get('/', function(req, res, next) {
           }
 
           if(n === 'true'){
-            res.send("Found hip wanna chat?");
+            res.send("true");
           }
 
         }
-            res.send("No hips found near from you.");
+            res.send("false");
       }
     }
   });
