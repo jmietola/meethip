@@ -7,7 +7,8 @@ const locationCache = new NodeCache( { stdTTL: 0, checkperiod: 0 , useClones: fa
 var storage = require('node-persist');
 
 //you must first call storage.initSync
-storage.initSync();
+storage.initSync({ttl: 30000});
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -41,6 +42,7 @@ router.get('/', function(req, res, next) {
     let value = storage.getItemSync('locationKey');
 
     var locationArray = value.locations;
+    console.log(locationArray);
     for (let values of locationArray) {
 
       if(currentLocation.lat !== values.lat){
