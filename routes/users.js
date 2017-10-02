@@ -2,7 +2,12 @@ var express = require('express');
 var router = express.Router();
 
 var NodeCache = require('node-cache');
-const locationCache = new NodeCache( { stdTTL: 0, checkperiod: 0 } );
+const locationCache = new NodeCache( { stdTTL: 0, checkperiod: 0 , useClones: false} );
+
+var storage = require('node-persist');
+
+//you must first call storage.initSync
+storage.initSync();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -17,46 +22,36 @@ router.get('/', function(req, res, next) {
 
   var currentLocation = { lat: req.query.lat, lng: req.query.lng };
 
+  var obj = storage.getItemSync('locationKey');
   // Init empty cache
   if (typeof obj === 'undefined') {
+    console.log("Init obj", obj);
+    //60.1668336&lng=24.924071899999998
     var obj = {
     locations: [{ lat: req.query.lat, lng: req.query.lng }]
     };
   }
 
-  locationCache.get( "locationKey", function( err, value ){
-    if( !err ){
-      if(value == undefined){
-        // key not found
-      }else{
-        for (let values of value.locations) {
-          console.log("value", values);
-          if(currentLocation.lat !== values.lat){
-            var n = arePointsNear(currentLocation, values, 20);
-          } else{
-            console.log("identical location either self or unhip person");
-          }
-
-          if(n === 'true'){
-            res.send("true");
-          }
-
-        }
-            res.send("false");
-      }
-    }
-  });
-
   if(obj.locations.length > 0){
+    console.log("add to cache obj", currentLocation);
     obj.locations.push(currentLocation);
+    storage.setItemSync('locationKey', obj);
   }
 
-  locationCache.set( "locationKey", obj, function( err, success ){
-    if( !err && success ){
-      // true
-    }
-  });
+    let value = storage.getItemSync('locationKey');
 
+    var locationArray = value.locations;
+    for (let values of locationArray) {
+
+      if(currentLocation.lat !== values.lat){
+        var n = arePointsNear(currentLocation, values, 20);
+          res.send("true");
+          return;
+      } else {
+
+      }
+    }
+          res.send("false");
 });
 
 module.exports = router;
