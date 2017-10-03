@@ -28,7 +28,7 @@ module.exports = function (io) {
   });
 
   socket.on('say to', function(data){
-    console.log("say to", data);
+    console.log("say to", data.id, data.msg);
     socket.broadcast.to(data.id).emit('chat message', data.msg);
   });
 
