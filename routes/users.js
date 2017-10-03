@@ -11,14 +11,14 @@ router.get('/', function(req, res, next) {
   var obj = storage.getItemSync('locationKey');
   console.log(obj);
   // Init empty cache
-  if (typeof obj === 'undefined') {
+  if (typeof obj === 'undefined' || obj.locations.length < 0) {
     console.log("Init obj", obj);
     //60.1668336&lng=24.924071899999998
     var obj = {
     locations: [{ lat: req.query.lat, lng: req.query.lng }]
     };
   }
-  
+
   if(obj.locations.length > 0){
     console.log("add to cache obj", currentLocation);
     obj.locations.push(currentLocation);

@@ -45,15 +45,6 @@ module.exports = function (io) {
 
     socket.broadcast.to(data.id).emit('user left', "hip has left room");
 
-  /*  if (addedUser) {
-      --numUsers;
-
-      // echo globally that this client has left
-      socket.broadcast.emit('user left', {
-        username: socket.username,
-        numUsers: numUsers
-      });
-    }*/
   });
 
   socket.on('say to', function(data){
@@ -68,6 +59,12 @@ module.exports = function (io) {
       username: socket.username,
       message: data
     });
+  });
+
+  // when the client emits 'stop typing', we broadcast it to others
+  socket.on('hipFound', function (data) {
+    console.log("hipFound", data.id, data.msg);
+    socket.broadcast.to(data.id).emit('hipMatch', data.msg);
   });
 
   // when the client emits 'add user', this listens and executes
