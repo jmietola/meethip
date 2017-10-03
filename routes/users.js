@@ -7,7 +7,7 @@ const locationCache = new NodeCache( { stdTTL: 0, checkperiod: 0 , useClones: fa
 var storage = require('node-persist');
 
 //you must first call storage.initSync
-storage.initSync({ttl: 30000});
+storage.initSync({ttl: 60000});
 
 
 /* GET users listing. */
