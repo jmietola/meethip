@@ -7,8 +7,9 @@ var helpers = require('../utils/helpers.js');
 router.get('/', function(req, res, next) {
 
   var currentLocation = { lat: req.query.lat, lng: req.query.lng };
-
+  console.log("TEST");
   var obj = storage.getItemSync('locationKey');
+  console.log(obj);
   // Init empty cache
   if (typeof obj === 'undefined') {
     console.log("Init obj", obj);
@@ -17,7 +18,7 @@ router.get('/', function(req, res, next) {
     locations: [{ lat: req.query.lat, lng: req.query.lng }]
     };
   }
-
+  
   if(obj.locations.length > 0){
     console.log("add to cache obj", currentLocation);
     obj.locations.push(currentLocation);

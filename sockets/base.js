@@ -1,3 +1,5 @@
+var storage = require('node-persist');
+
 module.exports = function (io) {
 
   // Chatroom
@@ -25,6 +27,33 @@ module.exports = function (io) {
   socket.on('room', function(room) {
     console.log("socket joins room", room);
     socket.join(room);
+  });
+
+  // when the user disconnects.. perform this
+  socket.on('remove', function (data) {
+
+    console.log("REMOVE", data);
+    let value = storage.getItemSync('locationKey');
+
+    var locationArray = value.locations;
+    console.log(locationArray);
+    value.locations = locationArray.filter(function(i) {
+    	return i.lat != data.lat;
+    });
+
+    storage.setItemSync('locationKey', value);
+
+    socket.broadcast.to(data.id).emit('user left', "hip has left room");
+
+  /*  if (addedUser) {
+      --numUsers;
+
+      // echo globally that this client has left
+      socket.broadcast.emit('user left', {
+        username: socket.username,
+        numUsers: numUsers
+      });
+    }*/
   });
 
   socket.on('say to', function(data){
@@ -61,6 +90,7 @@ module.exports = function (io) {
 
   // when the client emits 'typing', we broadcast it to others
   socket.on('typing', function () {
+    console.log("typing");
     socket.broadcast.emit('typing', {
       username: socket.username
     });
@@ -78,7 +108,8 @@ module.exports = function (io) {
 
     console.log("DISCONNECT");
 
-    if (addedUser) {
+//    storage.setItemSync('locationKey', obj);
+  /*  if (addedUser) {
       --numUsers;
 
       // echo globally that this client has left
@@ -86,7 +117,7 @@ module.exports = function (io) {
         username: socket.username,
         numUsers: numUsers
       });
-    }
+    }*/
   });
 
   });
