@@ -75,6 +75,9 @@ module.exports = function (io) {
 
   // when the user disconnects.. perform this
   socket.on('disconnect', function () {
+
+    console.log("DISCONNECT");
+
     if (addedUser) {
       --numUsers;
 
