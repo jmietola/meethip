@@ -36,9 +36,9 @@ module.exports = function (io) {
   });
 
   // when the client emits 'stop typing', we broadcast it to others
-  socket.on('hipFound', function (data) {
+  socket.on('hip found', function (data) {
     console.log("hipFound", data.id, data.msg);
-    socket.broadcast.to(data.id).emit('hipMatch', data.msg);
+    socket.broadcast.to(data.id).emit('hip match', data.msg);
   });
 
   // when the user disconnects.. perform this
